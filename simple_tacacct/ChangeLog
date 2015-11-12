@@ -1,0 +1,14 @@
+2015-10-26 simple_tacacct  v1.0.0 Dave Olson <olson@cumulusnetworks.com>
+
+	First revision:
+
+	This shared library has is designed to do very simple TACACS+ accounting.
+	It is designed to be used via dlopen, and to have a single function.
+
+	The caller calls the routine with a buffer of the "command" to be sent as
+	an accounting record, once with 1 as first argument to send a "start"
+	record, and then at the end with 0 as first argument to send a "stop"
+	record.
+
+	All config is handed within the library.   See acct_test.c for a simple
+	example of the usage.

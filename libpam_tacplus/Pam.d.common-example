@@ -1,0 +1,62 @@
+
+These are example changes for the /etc/pam.d/common-* files to use pam_tacplus
+in the enhanced mode.  I have have been unsuccessful (on ubuntu 14 or on debian
+wheezy or jessie), in using pam-auth-update files, because they get inserted at
+the incorrect locations.  You also need to be sure that these changes do not
+apply to su and sudo, because they must not reset the auid and sessionid.
+
+For all of these, debug is optional (but you'll probably want it during setup, unless you
+are really lucky and everything just works).
+
+I've done all my testing against the linux tacacs+ server (debian wheezy package) with
+nothing special in the configuration, other than adding some users.
+
+I recommend not using pam_loginuid.so with pam_tacplus, unless you have your
+kernel set to make the loginuid immutable (indicated by auditctl supporting
+the -loginuid-immutable option.
+
+/etc/tacplus_servers will have the list of tacacs+ servers and their shared secret. E.g:
+=====
+secret=tacacskey
+server=192.168.1.1
+=====
+
+common-account, just prior to pam_unix.so, insert:
+=====
+# Only try tacacs for "user" accounts.  If you change or remove this line
+# be sure to do something to at least allow root (uid==0) to login when
+# tacacs server is down or not reachable.  Also, if tacacs doesn't succeed
+# fall through to normal unix method
+account [default=1 success=ignore] pam_succeed_if.so uid >= 1000 quiet
+account	[authinfo_unavail=ignore success=2 default=ignore]	pam_tacplus.so include=/etc/tacplus_servers login=login protocol=ssh service=shell
+=====
+
+common-auth, just prior to pam_unix.so, insert:
+=====
+# Only try tacacs for "user" accounts.  If you change or remove this line
+# be sure to do something to at least allow root (uid==0) to login when
+# tacacs server is down or not reachable.  Also, if tacacs doesn't succeed
+# fall through to normal unix method
+auth [default=1 success=ignore] pam_succeed_if.so uid >= 1000 quiet
+auth [authinfo_unavail=ignore success=2 default=ignore]	pam_tacplus.so include=/etc/tacplus_servers login=login protocol=ssh service=shell
+=====
+
+common-session, just prior to pam_unix.so, insert:
+=====
+ Only try tacacs for "user" accounts.  If you change or remove this line
+# be sure to do something to at least allow root (uid==0) to login when
+# tacacs server is down or not reachable.  Also, if tacacs doesn't succeed
+# fall through to normal unix method
+session [default=1 success=ignore] pam_succeed_if.so uid >= 1000 quiet
+session	[authinfo_unavail=ignore success=ok default=ignore] pam_tacplus.so include=/etc/tacplus_servers login=login protocol=ssh service=shell
+=====
+
+common-session-noninteractive, just prior to pam_unix.so, insert:
+=====
+# Only try tacacs for "user" accounts.  If you change or remove this line
+# be sure to do something to at least allow root (uid==0) to login when
+# tacacs server is down or not reachable.  Also, if tacacs doesn't succeed
+# fall through to normal unix method
+session [default=1 success=ignore] pam_succeed_if.so uid >= 1000 quiet
+session	[authinfo_unavail=ignore success=ok default=ignore] pam_tacplus.so include=/etc/tacplus_servers login=login protocol=ssh service=shell
+=====

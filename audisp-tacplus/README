@@ -1,0 +1,124 @@
+audisp-tacplus v1.0.0
+Oct 30, 2015
+
+This audisp module has is designed to do TACACS+ accounting,
+using a plugin to auditd/audisp.  It uses the libtacplus_map.so
+library interfaces that are part of my modified lipam_tacplus
+package.  It also requires libnss_tacplus.
+
+It was written to work with a modified version of pam_tacplus
+and libnss_tacplus, that allows tacacs users to login without
+a specific account in the password file, and mapping to to
+tacacs0...tacacs15 local users.
+
+The plugin maps the auid in the accounting record to a tacacs
+loginname, based on the auid and sessionid.
+
+It makes a new connection to the TACACS+ server each time, because libtac
+is single threaded.  libtac doesn't support multiple connects at the same
+time due to use of globals, and it doesn't have support for persistent
+connections at this time.
+
+Only the TACACS+ accounting functions are used.
+
+You can do simple testing, assuming auditd has been running, and
+"interesting" events have been logged, most particularly exec
+system calls, via the auditctl command or audit.rules:
+    auditctl -a entry,always -F 'auid>1001' -S execve -F success=1
+    auditctl -a exit,always -F 'auid>1001' -S execve -F success=1
+    # run some commands with loginuid >= 1001.
+    ausearch --start today --raw > test.log
+    ./audisp-tacplus < test.log
+
+Up to 240 bytes of command name and command arguments will be sent
+in the accounting record, due to the 255 byte tacacs+ field length
+limitation.
+
+This code is substantially based on audisp-example.c by
+  Steve Grubb <sgrubb@redhat.com>
+  Copyright 2009 Red Hat Inc., Durham, North Carolina.
+  All Rights Reserved.
+
+The TACACS code here is based in the pam_tacplus plugin, written by
+   Pawel Krawczyk <pawel.krawczyk@hush.com> and Jeroen Nijhof <jeroen@jeroennijhof.nl>
+   Copyright (C) 2010, Pawel Krawczyk <pawel.krawczyk@hush.com> and
+   Jeroen Nijhof <jeroen@jeroennijhof.nl>
+It is based on version pam_tacplus version 1.3.9.
+It uses the libtac.so shared library from a modified libpam_tacplus
+package.
+
+Accounting  performed using TACACS+ protocol [1], designed by Cisco Systems.
+This is remote AAA protocol, supported by most Cisco hardware. 
+
+There are two configuration files, one for the plugin (normally
+/etc/audisp/plugins.d/audisp-tacplus.conf), and one for the tacacs+
+server configuration (normally /etc/audisp/audisp-tac_plus.conf; a different
+file can be configured in audisp-tacplus.conf).
+
+See the sample configuration files audisp-tac_plus.conf  audisp-tacplus.conf
+
+~~~~~~~~~~~~~~~~~~~
+Recognized options in the configuration file are the same as the command line
+arguments for libpam_tacplus, but not all pam_tacplus options are supported.
+
+Option		Management group        Description
+--------------- ----------------------- ----------------------------------
+debug           ALL                     output debugging information via
+                                        syslog(3); note, that the debugging
+                                        is heavy, including passwords!
+					
+secret=STRING   ALL                     can be specified more than once;
+                                        secret key used to encrypt/decrypt
+                                        packets sent/received from the server
+
+server=HOSTNAME auth, session           can be specified more than once;
+server=IP_ADDR                          adds a TACACS+ server to the servers
+                                        list
+                                        default is 5 seconds
+
+login=STRING    auth                    TACACS+ authentication service,
+                                        this can be "pap", "chap" or "login"
+                                        at the moment. Default is pap.
+
+acct_all        session                 if multiple servers are supplied,
+                                        audisp_tacplus will send accounting
+                                        start/stop packets to all servers
+                                        on the list, otherwise only to the
+                                        first responding server.
+
+service         account, session        TACACS+ service for accounting
+
+protocol        account, session        TACACS+ protocol for accounting
+
+The last two items are widely described in TACACS+ draft [1]. They are
+required by the server, but it will work if they don't match the real
+service authorized :)
+in this directory.
+
+The audisp-tacplus plugin has only been compiled and tested on
+debian wheezy and jessie at this writing.
+
+This plugin has only been tested with the linux tacacs+ server, but
+it requires very basic functionality, so it should work with other
+tacacs+ servers.
+
+See the libpam_tacplus README for more information on the tacacs
+protocol.
+		
+References:
+~~~~~~~~~~~
+
+TACACS+
+1. ftp://ftpeng.cisco.com/pub/tacplus/tac_plus.rfc.1.76.txt
+2. ftp://ftpeng.cisco.com/pub/tacplus/tac_plus.3.0.12.alpha.tar.Z
+
+audisp plugin (linux)
+3. http://svn.fedorahosted.org/svn/audit/trunk/contrib/plugin/audisp-example.c
+   (sample plugin, also found in contrib/plugin/audisp-example.c after
+   fetching the audisp-plugins source: apt-get source audispd-plugins
+4. audisp.8 man page
+
+Author:
+~~~~~~~
+
+Dave Olson <olson@cumulusnetworks.com>

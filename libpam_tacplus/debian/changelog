@@ -1,0 +1,50 @@
+libpam-tacplus (1.3.9+cl1-1) wheezy; urgency=low
+  * Non-maintainer upload
+  * libtacplus_map APIs to support local mapping, so that TACACS users do not
+    add accounts to /etc/passwd to supply home directory, uid, and gid
+  * Added the runtime config capability to include another file, so that
+    the tacacs servers are only listed in a single place.  Ship using
+    /etc/tacplus_servers as an include file, and use it in the pam sample config
+  * Modified debian packaging to create separate libtac and libtacplus-map
+    packages.
+  * Renamed external libtac functions to all have a tac_ prefix, to avoid
+    name collision with other programs (the x*alloc family was an issue, in
+    particular).
+
+ -- Dave Olson <olson@cumulusnetworks.com>  Tue, 20 Oct 2015 10:00:00 -0700
+
+libpam-tacplus (1.3.8-2) unstable; urgency=low
+
+  * Added postinst and prerm scripts for pam-auth-update. Closes: #739274
+
+ -- Jeroen Nijhof <jeroen@jeroennijhof.nl>  Mon, 17 Feb 2014 18:58:59 +0100
+
+libpam-tacplus (1.3.8-1) unstable; urgency=low
+
+  * New upstream release.
+  * Fixed pam-configs. Closes: #717716
+  * Added dh-autoreconf. Closes: #734228
+
+ -- Jeroen Nijhof <jeroen@jeroennijhof.nl>  Fri, 31 Jan 2014 12:32:00 +0100
+
+libpam-tacplus (1.3.7-1) unstable; urgency=low
+
+  * New upstream release.
+  * Changed compat level to 9 for hardening
+  * Fixed license link
+
+ -- Jeroen Nijhof <jeroen@jeroennijhof.nl>  Mon, 19 May 2012 19:25:00 +0100
+
+libpam-tacplus (1.3.6-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added libpam-runtime support.
+
+ -- Jeroen Nijhof <jeroen@jeroennijhof.nl>  Mon, 7 May 2012 21:21:00 +0100
+
+libpam-tacplus (1.3.5-1) unstable; urgency=low
+
+  * First version of pam_tacplus debian package. Closes: #588172
+
+ -- Jeroen Nijhof <jeroen@jeroennijhof.nl>  Mon, 5 Sep 2011 16:01:00 +0100
+

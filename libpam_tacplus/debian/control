@@ -1,0 +1,53 @@
+Source: libpam-tacplus
+Section: admin
+Priority: extra
+Maintainer: Jeroen Nijhof <jeroen@jeroennijhof.nl>
+Build-Depends: debhelper (>= 9), libpam-dev, dh-autoreconf, autoconf-archive, libaudit-dev
+Standards-Version: 3.9.5
+Homepage: https://github.com/jeroennijhof/pam_tacplus
+
+Package: libpam-tacplus
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libpam-runtime, libtac2, libtacplus-map1
+Description: PAM module for using TACACS+ as an authentication service
+ This PAM module support authentication, authorization (account management) and
+ accounting (session management) performed using TACACS+ protocol designed by
+ Cisco.
+
+Package: libpam-tacplus-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libpam-tacplus (= ${binary:Version}), libc6-dev|libc-dev
+Description: Development files for PAM module for using TACACS+ authentication
+ Provides header files for development with libpam-tacplus
+
+Package: libtac2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libaudit0
+Description: TACACS+ protocol library 
+ This library implemenents the fundamentls of the TACACS+ protocol and supports
+ authentication, authorization (account management) and accounting (session
+ management).
+
+Package: libtac-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libtac2 (= ${binary:Version}), libc6-dev|libc-dev
+Description: Development files for TACACS+ protocol library 
+ Contains C header files and development files for libtac, a TACACS+ protocol
+ implementation.
+
+Package: libtacplus-map1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Library for mapping TACACS+ users without local /etc/passwd entries
+ APIs to support local mapping, so that TACACS users do not need tacacs user
+ accounts to /etc/passwd to supply home directory, uid, and gid.
+
+Package: libtacplus-map-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libtacplus-map1 (= ${binary:Version}), libc-dev
+Description: Development files for TACACS+ user-mapping library
+ Header files and .so shared library link for APIs to support local TACACS
+ mapping of accounts

@@ -1,0 +1,11 @@
+2015-10-24 audisp-tacplus v1.0.0 Dave Olson <olson@cumulusnetworks.com>
+
+	First revision:
+
+	This audisp module has is designed to do TACACS+ accounting.
+	It was written to work with a modified version of pam_tacplus
+	and nss_tacplus, that allows tacacs users to login without
+	a specific account in the password file, and mapping to to
+	tacacs0...tacacs15 local users.
+
+	See README for more details and limitations

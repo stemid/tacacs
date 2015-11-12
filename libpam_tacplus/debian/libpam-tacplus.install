@@ -1,0 +1,3 @@
+lib/*/security/*.so
+usr/share/doc/libpam-tacplus/sample.pam
+etc/tacplus_servers

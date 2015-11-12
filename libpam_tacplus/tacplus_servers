@@ -1,0 +1,9 @@
+# This is a common file used by audisp-tacplus, libpam_tacplus, and
+# libtacplus_map config files as shipped.
+#
+# Any tac_plus client config can go here that is common to all users of this
+# file, but typically it's just the TACACS+ server IP address(es) and shared
+# secret(s)
+
+#secret=tacacskey
+#server=192.168.0.30

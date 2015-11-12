@@ -1,0 +1,7 @@
+libtacplus_map.so.1 libtacplus-map1 #MINVER#
+ __update_loguid@Base 1.3.9+cl1-1
+ get_user_to_auth@Base 1.3.9+cl1-1
+ lookup_logname@Base 1.3.9+cl1-1
+ lookup_mapuid@Base 1.3.9+cl1-1
+ map_get_sessionid@Base 1.3.9+cl1-1
+ update_mapuser@Base 1.3.9+cl1-1

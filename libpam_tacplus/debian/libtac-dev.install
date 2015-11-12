@@ -1,0 +1,3 @@
+usr/lib/*/libtac.so
+usr/lib/*/pkgconfig/libtac.pc
+usr/include/tacplus/libtac.h

@@ -1,0 +1,19 @@
+# This file contains the auditctl rules that are loaded
+# whenever the audit daemon is started via the initscripts.
+# The rules are simply the parameters that would be passed
+# to auditctl.
+
+# First rule - delete all
+-D
+
+# Increase the buffers to survive stress events.
+# Make this bigger for busy systems
+-b 320
+
+-a exit,always -F arch=b32 -F auid>1001 -S execve -F success=1
+-a exit,always -F arch=b64 -F auid>1001 -S execve -F success=1
+-a user,never -F subj_type=crond_t
+-a exit,never -F path=/usr/sbin/cron
+-a exit,never -F path=/usr/bin/pkexec
+
+# add your own rules below this line. See auditctl man page
