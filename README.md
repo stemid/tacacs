@@ -17,7 +17,7 @@ $ sudo yum install audit-libs-devel
 Begin with building and installing the libpm_tacplus library. 
 The reason we have to start with lib_tacplus is because the other libraries are dependent on it.
 
-The build and installation procedure is that same for all four libraries, after /cd/ into each respective
+The build and installation procedure is that same for all four libraries, after *cd* into each respective
 directory run the following commands:
 
 ```
