@@ -9,10 +9,7 @@ First make sure that the audit development libraries are installed on the system
 
 ```
 $ sudo yum install audit-libs-devel
-
 ```
-
-
 
 
 # Installation
@@ -38,7 +35,7 @@ $ make install
 Create the file /etc/ld.so.conf.d/tacacs.conf with the following content:
 
 ```
-/usr/local/lib
+gure /usr/local/lib
 /usr/local/lib/security
 ```
 
@@ -68,8 +65,48 @@ secret=MySuperSecretPassword2
 server=192.71.124.11
 ```
 
+## Configure tacplus_nss
+
+Copy the file /usr/local/etc/tacplus_nss.conf to /etc/tacplus_nss.conf
+and make sure it has the following content:
+```
+debug=0
+service=shell
+include=/etc/tacplus_servers
+```
+
+## Configure audit
+
+Copy the file  /usr/local/etc/audisp/audisp-tac_plus.conf to /etc/audisp/audisp-tac_plus.conf
+and add the following content:
+
+```
+acct_all=1
+service=shell
+```
+
+Copy the file /usr/local/etc/audisp/plugins.d/audisp-tacplus.conf to
+/etc/audisp/plugins.d/audisp-tacplus.conf and make sure it contains the following:
+```
+active = yes # if no, accounting is disabled
+direction = out
+path = /usr/local/sbin/audisp-tacplus
+type = always
+format = string
+```
 
 
-## SSH PAM
+## SSH PAM Modules
 
-Create the file /etc/pam.d/tacacs.conf
+Create the file /etc/pam.d/tacacs.conf with the following content:
+
+```
+auth    sufficient /usr/local/lib/security/pam_tacplus.so include=/etc/tacplus_servers 
+account sufficient /usr/local/lib/security/pam_tacplus.so include=/etc/tacplus_servers login=login protocol=ssh service=shell
+session sufficient /usr/local/lib/security/pam_tacplus.so include=/etc/tacplus_servers login=login protocol=ssh service=shell
+```
+
+Then edit /etc/pam.d/ssh and add the following line to the **top** of the file.
+```
+auth       include      tacacs
+```
