@@ -8,10 +8,7 @@ First make sure that the C developer tools and the development libraries for PAM
 
 
 ```
-$ sudo yum install gcc
-$ sudo yum install libtool
-$ sudo yum install autoconf
-$ sudo yum install automake
+$ sudo yum groupinstall 'Development'
 
 $ sudo yum install pam-devel
 $ sudo yum install audit-libs-devel
